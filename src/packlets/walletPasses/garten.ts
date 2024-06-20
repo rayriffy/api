@@ -32,14 +32,11 @@ export const garten = new Elysia({
       },
     ).catch(() => null);
 
-    console.log(bearer);
-    console.log(result);
-
     if (
       process.env.NODE_ENV === "production" &&
       (result === null ||
-        result.payload.email_verified ||
-        ["creatorsgarten@rayriffy-api.iam.gserviceaccount.com"].includes(
+        !result.payload.email_verified ||
+        !["creatorsgarten@rayriffy-api.iam.gserviceaccount.com"].includes(
           result.payload.email,
         ))
     ) {
