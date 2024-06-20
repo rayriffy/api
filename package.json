@@ -6,13 +6,14 @@
     "dev": "bun run --watch src/server.ts"
   },
   "dependencies": {
-    "@elysiajs/bearer": "^1.0.2",
+    "@elysiajs/bearer": "1.0.2",
     "@elysiajs/cors": "1.0.2",
     "@elysiajs/stream": "1.0.2",
     "@elysiajs/swagger": "1.0.5",
     "cheerio": "1.0.0-rc.12",
     "dayjs": "1.11.11",
     "elysia": "1.0.24",
+    "jose": "5.4.1",
     "jsonwebtoken": "9.0.2",
     "memoize": "10.0.0",
     "passkit-generator": "3.1.11",
