@@ -9,7 +9,7 @@ import { router as walletPasses } from "./packlets/walletPasses/router";
 export const app = new Elysia()
   .use(swagger())
   .use(cors())
-  .get("/", ({ set }) => "hello")
+  .get("/", ({ set }) => (set.redirect = "/swagger"))
   .use(appleMaps)
   .use(walletPasses)
   .listen(3000);

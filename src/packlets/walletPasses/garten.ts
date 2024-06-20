@@ -143,4 +143,8 @@ export const garten = new Elysia({
     {
       query: gartenPassModel,
     },
+  )
+  .get(
+    "/google",
+    ({ set }) => (set.redirect = "https://www.apple.com/iphone/"),
   );
