@@ -14,7 +14,7 @@ RUN /root/.bun/bin/bun install
 
 # ? -------------------------
 
-FROM gcr.io/distroless/base-debian12
+FROM gcr.io/distroless/cc-debian12
 
 WORKDIR /app
 
