@@ -7,7 +7,7 @@ import utc from "dayjs/plugin/utc";
 
 import { assetLoader, certs } from "./fileLoader";
 import { gartenPassModel } from "./model";
-import { googleOpenIdAuth } from "../commons/googleOpenIdAuth";
+import { googleOpenIdAuthHandler } from "../commons/googleOpenIdAuth";
 
 const { APPLE_TEAM_ID, PASS_GARDEN_SIGNER_KEY } = process.env;
 
@@ -18,8 +18,8 @@ const parseDate = (date: Date) => dayjs(date).utcOffset(7);
 export const garten = new Elysia({
   prefix: "/garten",
 })
-  .use(
-    googleOpenIdAuth({
+  .onBeforeHandle(
+    googleOpenIdAuthHandler({
       allowedEmails: ["creatorsgarten@rayriffy-api.iam.gserviceaccount.com"],
       audiences: ["https://github.com/rayriffy/api"],
     }),
