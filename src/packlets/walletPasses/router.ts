@@ -12,7 +12,7 @@ export const router = new Elysia({
   prefix: "/walletPasses",
 }).get(
   "/garten",
-  async ({ query, headers }) => {
+  async ({ query, set }) => {
     const { event, user } = query;
 
     // download an image
@@ -22,6 +22,7 @@ export const router = new Elysia({
     const sharpenImage = sharp(image).png({
       compressionLevel: 7,
     });
+
     const [thumbnail, thumbnail2x, wwdr, signerCert, signerKey] =
       await Promise.all([
         sharpenImage.resize(150, 150).toBuffer(),
@@ -55,7 +56,7 @@ export const router = new Elysia({
       },
       {
         formatVersion: 1,
-        passTypeIdentifier: "pass.org.creatorsgarten.event",
+        passTypeIdentifier: "pass.org.creatorsgarten.events",
         teamIdentifier: APPLE_TEAM_ID,
         organizationName: "Creatorsgarten",
         description: "Creatorsgarten Event Ticket",
@@ -104,7 +105,9 @@ export const router = new Elysia({
       },
     );
 
-    headers["Content-Type"] = "application/vnd.apple.pkpass";
+    set.headers["Content-Type"] = pass.mimeType;
+    set.headers["Content-disposition"] =
+      `attachment; filename=${event.id}.pkpass`;
 
     return pass.getAsStream();
   },
