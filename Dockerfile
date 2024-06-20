@@ -23,9 +23,9 @@ COPY --from=builder /app/node_modules node_modules
 
 COPY src src
 
-ENV ENV production
+ENV NODE_ENV production
 ENV PORT 3000
-CMD ["./bun", "src/index.ts"]
+CMD ["./bun", "src/server.ts"]
 
 EXPOSE 3000
 

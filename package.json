@@ -3,19 +3,23 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/server.ts"
   },
   "dependencies": {
-    "@elysiajs/cors": "^1.0.2",
-    "@elysiajs/swagger": "^1.0.4",
-    "cheerio": "^1.0.0-rc.12",
-    "elysia": "latest",
-    "jsonwebtoken": "^9.0.2",
-    "memoize": "^10.0.0"
+    "@elysiajs/cors": "1.0.2",
+    "@elysiajs/stream": "1.0.2",
+    "@elysiajs/swagger": "1.0.5",
+    "cheerio": "1.0.0-rc.12",
+    "elysia": "1.0.24",
+    "jsonwebtoken": "9.0.2",
+    "memoize": "10.0.0",
+    "passkit-generator": "3.1.11",
+    "sharp": "0.33.4"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.6",
+    "@types/jsonwebtoken": "9.0.6",
     "bun-types": "latest"
   },
-  "module": "src/index.js"
+  "module": "src/index.js",
+  "packageManager": "pnpm@9.3.0+sha512.ee7b93e0c2bd11409c6424f92b866f31d3ea1bef5fbe47d3c7500cdc3c9668833d2e55681ad66df5b640c61fa9dc25d546efa54d76d7f8bf54b13614ac293631"
 }
