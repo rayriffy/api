@@ -1,4 +1,5 @@
-export const load = async (filePath: string) => await Bun.file(filePath).text();
+export const load = async (filePath: string) =>
+  Buffer.from(await Bun.file(filePath).arrayBuffer());
 
 export const asset = async (fileName: string, actualResolve?: string) => [
   fileName,

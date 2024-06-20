@@ -10,6 +10,7 @@
     "@elysiajs/stream": "1.0.2",
     "@elysiajs/swagger": "1.0.5",
     "cheerio": "1.0.0-rc.12",
+    "dayjs": "1.11.11",
     "elysia": "1.0.24",
     "jsonwebtoken": "9.0.2",
     "memoize": "10.0.0",

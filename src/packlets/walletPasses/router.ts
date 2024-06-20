@@ -2,11 +2,17 @@ import { Elysia } from "elysia";
 
 import { PKPass } from "passkit-generator";
 import sharp from "sharp";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
-import { asset, certs, load } from "./fileLoader";
+import { asset, certs } from "./fileLoader";
 import { gartenPassModel } from "./model";
 
 const { APPLE_TEAM_ID, PASS_GARDEN_SIGNER_KEY } = process.env;
+
+dayjs.extend(utc);
+
+const parseDate = (date: Date) => dayjs(date).utcOffset(7);
 
 export const router = new Elysia({
   prefix: "/walletPasses",
@@ -31,6 +37,9 @@ export const router = new Elysia({
         certs("garten/cert"),
         certs("garten/key"),
       ]);
+
+    const parsedDate = parseDate(event.date);
+    const parsedEndDate = event.endDate ? parseDate(event.endDate) : null;
 
     // building the pass
     const pass = new PKPass(
@@ -62,13 +71,20 @@ export const router = new Elysia({
         description: "Creatorsgarten Event Ticket",
         serialNumber: `${event.id}-${user.ticket.ref}`,
         foregroundColor: "rgb(255, 255, 255)",
-        backgroundColor: "rgb(0, 0, 0)",
+        backgroundColor: "rgb(0, 168, 253)",
         labelColor: "rgb(255, 255, 255)",
-        logoText: "Text",
+        semantics: {
+          eventName: event.name,
+          eventType: "PKEventTypeConference",
+          eventStartDate: parsedDate.startOf("day").toISOString(),
+          eventEndDate: (parsedEndDate ?? parsedDate)
+            .endOf("day")
+            .toISOString(),
+        },
       },
     );
 
-    pass.setRelevantDate(new Date("2024-07-13T08:00+07:00"));
+    pass.setRelevantDate(parsedDate.startOf("day").toDate());
 
     pass.setBarcodes({
       format: "PKBarcodeFormatQR",
@@ -80,7 +96,7 @@ export const router = new Elysia({
     pass.headerFields.push({
       key: "date",
       label: "DATE",
-      value: "13 Jul",
+      value: `${parsedDate.format("DD MMM")}${parsedEndDate ? ` - ${parsedEndDate.format("DD MMM")}` : ""}`,
     });
     pass.primaryFields.push({
       key: "event",
@@ -104,6 +120,10 @@ export const router = new Elysia({
         value: user.ticket.type,
       },
     );
+    pass.backFields.push({
+      key: "notes",
+      value: "Beta",
+    });
 
     set.headers["Content-Type"] = pass.mimeType;
     set.headers["Content-disposition"] =

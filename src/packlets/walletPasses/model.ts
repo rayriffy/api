@@ -12,6 +12,7 @@ export const gartenPassModel = t.Object({
     id: t.String(),
     name: t.String(),
     date: t.Date(),
+    endDate: t.Optional(t.Date()),
     image: t.String(),
     location: t.String(),
   }),
