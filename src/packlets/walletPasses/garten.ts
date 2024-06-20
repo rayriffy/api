@@ -1,16 +1,13 @@
 import { Elysia } from "elysia";
 
-import { bearer } from "@elysiajs/bearer";
-
 import { PKPass } from "passkit-generator";
 import sharp from "sharp";
-import { createRemoteJWKSet, jwtVerify } from "jose";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 import { assetLoader, certs } from "./fileLoader";
 import { gartenPassModel } from "./model";
-import { JWTPayload } from "./types";
+import { googleOpenIdAuth } from "../commons/googleOpenIdAuth";
 
 const { APPLE_TEAM_ID, PASS_GARDEN_SIGNER_KEY } = process.env;
 
@@ -21,32 +18,12 @@ const parseDate = (date: Date) => dayjs(date).utcOffset(7);
 export const garten = new Elysia({
   prefix: "/garten",
 })
-  .use(bearer())
-  .onBeforeHandle(async ({ bearer, set }) => {
-    const result = await jwtVerify<JWTPayload>(
-      bearer!,
-      createRemoteJWKSet(new URL("https://www.googleapis.com/oauth2/v3/certs")),
-      {
-        issuer: "https://accounts.google.com",
-        audience: ["https://github.com/rayriffy/api"],
-      },
-    ).catch(() => null);
-
-    if (
-      process.env.NODE_ENV === "production" &&
-      (result === null ||
-        !result.payload.email_verified ||
-        !["creatorsgarten@rayriffy-api.iam.gserviceaccount.com"].includes(
-          result.payload.email,
-        ))
-    ) {
-      set.status = 400;
-      set.headers["WWW-Authenticate"] =
-        `Bearer realm='sign', error="invalid_request"`;
-
-      return "Unauthorized";
-    }
-  })
+  .use(
+    googleOpenIdAuth({
+      allowedEmails: ["creatorsgarten@rayriffy-api.iam.gserviceaccount.com"],
+      audiences: ["https://github.com/rayriffy/api"],
+    }),
+  )
   .get(
     "/apple",
     async ({ query, set }) => {

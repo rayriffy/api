@@ -9,8 +9,11 @@ import { router as walletPasses } from "./packlets/walletPasses/router";
 export const app = new Elysia()
   .use(swagger())
   .use(cors())
-  .get("/", ({ set }) => (set.redirect = "/swagger"))
+  .get("/", ({ set }) => "hello")
   .use(appleMaps)
-  .use(walletPasses);
+  .use(walletPasses)
+  .listen(3000);
 
-export type App = typeof app;
+console.log(
+  `🦊 Swagger is running at https://${app.server?.hostname}:${app.server?.port}/swagger`,
+);
