@@ -8,6 +8,7 @@ import utc from "dayjs/plugin/utc";
 import { assetLoader, certs } from "./fileLoader";
 import { gartenPassModel } from "./model";
 import { googleOpenIdAuthHandler } from "../commons/googleOpenIdAuth";
+import { downloadImage } from "./downloadImage";
 
 const { APPLE_TEAM_ID, PASS_GARDEN_SIGNER_KEY } = process.env;
 
@@ -30,7 +31,7 @@ export const garten = new Elysia({
       const { event, user } = query;
 
       // download an image
-      const image = await fetch(event.image).then((o) => o.arrayBuffer());
+      const image = await downloadImage(event.image);
 
       // process image into 2 sizes
       const sharpenImage = sharp(image).png({
