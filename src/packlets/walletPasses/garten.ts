@@ -9,6 +9,7 @@ import { assetLoader, certs } from "./fileLoader";
 import { gartenPassModel } from "./model";
 import { googleOpenIdAuthHandler } from "../commons/googleOpenIdAuth";
 import { downloadImage } from "./downloadImage";
+import { getMapHandler } from "./getMapHandler";
 
 const { APPLE_TEAM_ID, PASS_GARDEN_SIGNER_KEY } = process.env;
 
@@ -25,6 +26,10 @@ export const garten = new Elysia({
       audiences: ["https://github.com/rayriffy/api"],
     }),
   )
+  .decorate({
+    bar: "hello",
+  })
+  .get("/map", getMapHandler)
   .get(
     "/apple",
     async ({ query, set }) => {

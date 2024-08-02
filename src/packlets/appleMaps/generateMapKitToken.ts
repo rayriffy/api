@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
+import memoize from "memoize";
 
-const { APPLE_PRIVATE_KEY = "", APPLE_KEY_ID, APPLE_TEAM_ID } = process.env;
+const { MAP_PRIVATE_KEY = "", MAP_KEY_ID, APPLE_TEAM_ID } = process.env;
 
-export const generateMapKitToken = (keyDuration = 60 * 60) => {
+export const generateMapKitToken = memoize(() => {
   const issuedAt = Math.floor(Date.now() / 1000);
-  const age = 30 * 60; // 30 minutes
+  const age = 30 * 60; // key expires in 30 minutes
   const expiredAt = issuedAt + age;
 
   return jwt.sign(
@@ -13,18 +14,18 @@ export const generateMapKitToken = (keyDuration = 60 * 60) => {
       iss: APPLE_TEAM_ID,
       iat: issuedAt,
       exp: expiredAt,
-      origin: "https://javascriptbangkok.com",
+      origin: "javascriptbangkok.com",
     },
-    APPLE_PRIVATE_KEY.replaceAll(/\\n/g, "\n"),
+      MAP_PRIVATE_KEY.replaceAll(/\\n/g, "\n"),
     {
-      issuer: APPLE_TEAM_ID,
-      expiresIn: 60 * 60, // 1 hour
       algorithm: "ES256",
       header: {
         alg: "ES256",
-        kid: APPLE_KEY_ID,
+        kid: MAP_KEY_ID,
         typ: "JWT",
       },
     },
   );
-};
+}, {
+    maxAge: 1000 * 60 * 20, // 20 minutes
+});
