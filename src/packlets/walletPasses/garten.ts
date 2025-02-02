@@ -26,10 +26,7 @@ export const garten = new Elysia({
       audiences: ["https://github.com/rayriffy/api"],
     }),
   )
-  .decorate({
-    bar: "hello",
-  })
-  .get("/map", getMapHandler)
+  // .get("/map", getMapHandler)
   .get(
     "/apple",
     async ({ query, set }) => {
