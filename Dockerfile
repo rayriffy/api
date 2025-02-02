@@ -1,33 +1,31 @@
-FROM oven/bun:1.2.2-alpine AS builder
+FROM debian:12-slim as builder
 
 WORKDIR /app
+
+RUN apt update
+RUN apt install curl unzip -y
+
+RUN curl https://bun.sh/install | bash
 
 COPY package.json .
 COPY bun.lockb .
 
-RUN bun install --ignore-scripts
-
-COPY ./src ./src
-
-ENV NODE_ENV=production
-RUN bun build \
-	--compile \
-	--minify-whitespace \
-	--minify-syntax \
-	--target bun \
-	--outfile server \
-	./src/index.ts
+RUN /root/.bun/bin/bun install
 
 # ? -------------------------
 
-FROM alpine:3.21 AS runner
+FROM gcr.io/distroless/cc-debian12
 
 WORKDIR /app
-COPY --from=builder /app/server server
 
-ENV TZ=Asia/Bangkok
-ENV NODE_ENV=production
-ENV PORT=3000
+COPY --from=builder /root/.bun/bin/bun bun
+COPY --from=builder /app/node_modules node_modules
+
+COPY src src
+
+ENV NODE_ENV production
+ENV PORT 3000
+CMD ["./bun", "src/index.ts"]
+
 EXPOSE 3000
 
-CMD ["./server"]
