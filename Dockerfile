@@ -1,4 +1,4 @@
-FROM oven/bun:1.2.2-alpine AS builder
+FROM oven/bun:1.2.2-debian AS builder
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN bun build \
 
 # ? -------------------------
 
-FROM alpine:3.21 AS runner
+FROM debian:12-slim AS runner
 
 WORKDIR /app
 COPY --from=builder /app/server server
