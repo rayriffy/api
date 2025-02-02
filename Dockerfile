@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json .
 COPY bun.lockb .
 
-RUN bun install --ignore-scripts
+RUN bun install
 
 COPY ./src ./src
 
