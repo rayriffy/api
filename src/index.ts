@@ -5,8 +5,6 @@ import { cors } from "@elysiajs/cors";
 
 import { router as appleMaps } from "./packlets/appleMaps/router";
 import { router as walletPasses } from "./packlets/walletPasses/router";
-import { router as techcal } from "./packlets/techcal/router";
-import { router as scraper } from "./packlets/scraper/router";
 
 export const app = new Elysia()
   .use(swagger())
@@ -14,9 +12,10 @@ export const app = new Elysia()
   .get("/", ({ redirect }) => redirect("/swagger"))
   .use(appleMaps)
   .use(walletPasses)
-  .use(techcal)
-  .use(scraper)
-  .listen(3000);
+  .listen({
+    port: 3000,
+    idleTimeout: 120,
+  });
 
 console.log(
   `🦊 Swagger is running at http://${app.server?.hostname}:${app.server?.port}/swagger`,
